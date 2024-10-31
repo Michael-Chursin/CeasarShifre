@@ -1,14 +1,24 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.List;
+import  java.util.Scanner;
 
 public class Main {
-    static String[] alphabet = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    static List<Character> alphabet = List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
     static Scanner sc = new Scanner(System.in);
     public static String CeasarCode(String input, int key){
         String output = "";
         char[] in = input.toCharArray();
         for(char i: in){
-            output += (Arrays.asList(alphabet).contains("" + i)) ? alphabet[Arrays.asList(alphabet).indexOf("" + i) + key > alphabet.length ? Arrays.asList(alphabet).indexOf("" + i) + key - alphabet.length : Arrays.asList(alphabet).indexOf("" + i) + key] : i;
+            char c = i;
+            if(alphabet.contains(i)){
+                if(alphabet.indexOf(i) + key >= alphabet.size()){
+                    c = alphabet.get(alphabet.indexOf(i) + key - alphabet.size());
+                } else if (alphabet.indexOf(i) + key < 0) {
+                    c = alphabet.get(alphabet.size() - alphabet.indexOf(i) + key);
+                } else{
+                    c = alphabet.get(alphabet.indexOf(i) + key);
+                }
+            }
+            output += c;
         }
         return output;
     }
@@ -16,21 +26,55 @@ public class Main {
         String output = "";
         char[] in = input.toCharArray();
         for(char i: in){
-            output += (Arrays.asList(alphabet).contains("" + i)) ? alphabet[Arrays.asList(alphabet).indexOf("" + i) - key < 0 ? alphabet.length - Arrays.asList(alphabet).indexOf("" + i) - key : Arrays.asList(alphabet).indexOf("" + i) - key] : i;
+            char c = i;
+            if(alphabet.contains(i)){
+                if(alphabet.indexOf(i) - key >= alphabet.size()){
+                    c = alphabet.get(alphabet.indexOf(i) - key - alphabet.size());
+                } else if (alphabet.indexOf(i) - key < 0) {
+                    c = alphabet.get(alphabet.size() + (alphabet.indexOf(i) - key));
+                } else{
+                    c = alphabet.get(alphabet.indexOf(i) - key);
+                }
+            }
+            output += c;
         }
         return output;
     }
-    /*
-    public static String BruteDecode(String input){
-        String output = "";
+    public static void BruteDecode(String input){
+        List<String> often = List.of(" and ", " by ", " for ", " he ", " her ", " his ", " in ", " into ", " is ", " it ", " its ", " my ", " of ", " or ", " she ", " the ");
         char[] in = input.toCharArray();
-        for(int key = 0; key )
-        for(char i: in){
-            output += (Arrays.asList(alphabet).contains("" + i)) ? alphabet[Arrays.asList(alphabet).indexOf("" + i) - key] : i;
+        for(int key = -alphabet.size(); key < alphabet.size(); key++){
+            String output = "";
+            boolean correct = false;
+            for(char i: in){
+                char c = i;
+                if(alphabet.contains(i)){
+                    if(alphabet.indexOf(i) - key >= alphabet.size()){
+                        c = alphabet.get(alphabet.indexOf(i) - key - alphabet.size());
+                    } else if (alphabet.indexOf(i) - key < 0) {
+                        c = alphabet.get(alphabet.size() + (alphabet.indexOf(i) - key));
+                    } else{
+                        c = alphabet.get(alphabet.indexOf(i) - key);
+                    }
+                }
+                output += c;
+            }
+            for(String of: often){
+                if(output.contains(of)){
+                    correct = true;
+                }
+            }
+            if(correct){
+                System.out.println(output);
+                System.out.println("Print Y, if output makes sense");
+                char o = sc.next().toLowerCase().charAt(0);
+                if(o == 'y'){
+                    System.out.println("Supposed key:");
+                    System.out.println(key);
+                }
+            }
         }
-        return output;
     }
-    */
     public static void main(String[] args) {
         String input;
         int move;
@@ -38,6 +82,8 @@ public class Main {
         move = sc.nextInt();
         String out1 = CeasarCode(input, move);
         System.out.println(out1);
+        BruteDecode(out1);
+        move = sc.nextInt();
         System.out.println(CeasarDecode(out1, move));
     }
 }
